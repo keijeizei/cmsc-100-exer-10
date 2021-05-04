@@ -1,0 +1,14 @@
+.user {
+	width: 640px;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-radius: 5px;
+	overflow: hidden;
+	margin: 15px;
+
+	display: flex;   
+}
+
+.user:hover {
+	border: 1px solid #898989;
+}

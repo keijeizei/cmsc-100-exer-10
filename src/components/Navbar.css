@@ -1,0 +1,50 @@
+.navbar {
+	height: 48px;
+	padding: 0 20px;
+	background-color: white;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.logocontainer {
+	display: flex;
+}
+
+.buttoncontainer {
+	margin: 0;
+	padding: 0;
+}
+
+.logo {
+	width: 40px;
+	height: 40px;
+	margin-top: 13px;
+}
+
+.icon {
+	width: 20px;
+	height: 20px;
+	margin-bottom: -4px;
+}
+
+.iconbutton {
+	padding: 7px;
+	border-radius: 5px;
+}
+
+.iconbutton:hover {
+	background-color: #edeff1;
+}
+
+#searchbox {    
+	border: 1px solid #cccccc;
+	border-radius: 5px;
+
+	width: 500px;
+	height: 14px;
+
+	margin: 0 10px;
+	padding: 10px;
+}
