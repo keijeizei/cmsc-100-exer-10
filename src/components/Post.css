@@ -50,6 +50,23 @@
 	font-size: 12px;
 }
 
+.postvotebutton {
+	background-color: #f8f9fa;
+	border: 0px;
+
+	margin: 0;
+	padding: 6px;
+}
+
+.postvotebutton img {
+	width: 15px;
+	height: 15px;
+}
+
+.postvotebutton:hover {
+	background-color: #e1e2e3;
+}
+
 .postkarmanumber {
 	margin: 2px 0;
 	font-weight: bold;

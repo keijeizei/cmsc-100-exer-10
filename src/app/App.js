@@ -16,7 +16,7 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			clientusername: null
+			clientusername: "yagoo"
 		}
 
 		this.handleLogin = this.handleLogin.bind(this);

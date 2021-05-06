@@ -19,7 +19,13 @@ class PostCreator extends React.Component {
 				username: this.props.clientusername,
 				content: content
 			})
-		});
+		})
+		.then(() => {
+			// refresh feed
+			this.props.fetchFeed();
+		})
+
+		
 	}
 
     render() {

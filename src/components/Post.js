@@ -1,5 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import upvote from '../assets/up.png';
+import upvoteActivated from '../assets/upActivated.png';
+import downvote from '../assets/down.png';
+import downvoteActivated from '../assets/downActivated.png';
 import './Post.css';
 
 class Post extends React.Component {
@@ -7,28 +11,33 @@ class Post extends React.Component {
 		super(props);
 		this.state = {
 			postkarma: 0,
+			timestampstring: null,
+			vote: null,
 			color: "#000000"
 		}
 
 		this.handleDelete = this.handleDelete.bind(this);
+		this.handleUpvote = this.handleUpvote.bind(this);
+		this.handleDownvote = this.handleDownvote.bind(this);
+		this.refreshVoteButtons = this.refreshVoteButtons.bind(this);
 	}
 
 	componentDidMount() {
-		const postkarma = this.props.data.up.length - this.props.data.down.length;
-		this.setState({ postkarma: postkarma });
-		
-		// make color orange if user upvotes
-		if(this.props.data.up.includes(this.props.clientusername)) {
-			this.setState({ color: "#ff4500" });
-		}
-		// make color blue if user downvotes
-		else if(this.props.data.up.includes(this.props.clientusername)) {
-			this.setState({ color: "#7192ff" });
+		this.refreshVoteButtons();
+
+		// convert date to word date
+		const timestampdate = new Date(parseInt(this.props.data.timestamp));
+		this.setState({ timestampstring: timestampdate.toString() })
+	}
+
+	componentDidUpdate(prevProps) {
+		// if up or down arrays are changed (through fetchFeed), refresh the vote buttons
+		if(prevProps.data.up.length !== this.props.data.up.length || prevProps.data.down.length !== this.props.data.down.length) {
+			this.refreshVoteButtons();
 		}
 	}
 
 	handleDelete() {
-		console.log(this.props.data._id)
 		fetch('http://localhost:3001/delete-post', {
 			method: 'POST',
 			headers: {
@@ -38,20 +47,92 @@ class Post extends React.Component {
 				_id: this.props.data._id
 			})
 		});
+
+		// refresh feed
+		this.props.fetchFeed();
+	}
+
+	handleUpvote() {
+		fetch('http://localhost:3001/handle-vote', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				_id: this.props.data._id,
+				username: this.props.clientusername,
+				command: 1
+			})
+		})
+		.then(() => {
+			// refresh feed
+			this.props.fetchFeed();
+			
+		})
+	}
+
+	handleDownvote() {
+		fetch('http://localhost:3001/handle-vote', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				_id: this.props.data._id,
+				username: this.props.clientusername,
+				command: 0
+			})
+		})
+		.then(() => {
+			// refresh feed
+			this.props.fetchFeed();
+		})
+	}
+
+	refreshVoteButtons() {
+		const postkarma = this.props.data.up.length - this.props.data.down.length;
+		this.setState({ postkarma: postkarma });
+		
+		// make color orange if user upvotes
+		if(this.props.data.up.includes(this.props.clientusername)) {
+			this.setState({ color: "#ff4500", vote: 'up' });
+		}
+		// make color blue if user downvotes
+		else if(this.props.data.down.includes(this.props.clientusername)) {
+			this.setState({ color: "#7192ff", vote: 'down' });
+		}
+		// default color black
+		else {
+			this.setState({ color: "#000000", vote: null });
+		}
 	}
 
 	render() {
 		return(
 			<div className="post">
 				<div className="leftbar" style={{color: this.state.color}}>
-					<button>Up</button>
+					<button className="postvotebutton" onClick={this.handleUpvote}>
+						{this.state.vote === 'up'
+						?
+						<img src={upvoteActivated} alt="Upvote"/>
+						:
+						<img src={upvote} alt="Upvote"/>
+						}
+					</button>
 					<p className="postkarmanumber">{this.state.postkarma}</p>
-					<button>Down</button>
+					<button className="postvotebutton" onClick={this.handleDownvote}>
+						{this.state.vote === 'down'
+						?
+						<img src={downvoteActivated} alt="Upvote"/>
+						:
+						<img src={downvote} alt="Upvote"/>
+						}
+					</button>
 				</div>
 				<div className="postbody">
 					<p className="postdetails">
 						<Link className="postusername" to={`/u/${this.props.data.username}`}>u/{this.props.data.username}</Link>
-						&nbsp;| {this.props.data.timestamp}
+						&nbsp;| {this.state.timestampstring}
 					</p>
 					<p className="postcontent">{this.props.data.content}</p>
 					{this.props.clientusername === this.props.data.username &&
