@@ -1,17 +1,21 @@
 import React from 'react';
 import Post from '../components/Post';
 import PostCreator from '../components/PostCreator';
+import PostEditor from '../components/PostEditor';
 
 class Feed extends React.Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			clientusername: "yagoo",	// to-do, temporary, change after login is implemented
-			feed: []
+			feed: [],
+			isEditing: false,
+			editingID: null
 		}
 
 		this.fetchFeed = this.fetchFeed.bind(this);
+		this.openEdit = this.openEdit.bind(this);
+		this.closeEdit = this.closeEdit.bind(this);
 	}
 	
 	componentDidMount() {
@@ -30,16 +34,38 @@ class Feed extends React.Component {
 		}
 	}
 
+	openEdit(_id) {
+		this.setState({
+			isEditing: true,
+			editingID: _id
+		})
+	}
+
+	closeEdit(_id) {
+		this.setState({
+			isEditing: false
+		})
+	}
+
 	render() {
 		return(
 			<div className="maincontent">
-				<PostCreator clientusername={this.props.clientusername} fetchFeed={this.fetchFeed}/>
+				{this.state.isEditing &&
+					<PostEditor
+						feed={this.state.feed}
+						closeEdit={this.closeEdit}
+						editingID={this.state.editingID}
+						fetchFeed={this.fetchFeed}
+					/>
+				}
+				<PostCreator clientusername={this.props.clientusername} fetchFeed={this.fetchFeed} />
 				{this.state.feed.map(post => {
 					return <Post
 						key={post._id}
 						data={post}
 						clientusername={this.props.clientusername}
 						fetchFeed={this.fetchFeed}
+						openEdit={this.openEdit}
 						/>
 				})}
 			</div>

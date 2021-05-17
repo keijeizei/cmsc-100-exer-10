@@ -10,6 +10,7 @@ class Navbar extends React.Component {
 		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
+	
 	handleSubmit() {
 		const searchquery = document.getElementById('searchbox').value;
 		this.props.history.push(`/search?name=${searchquery}`)

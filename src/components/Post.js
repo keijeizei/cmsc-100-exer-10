@@ -137,7 +137,7 @@ class Post extends React.Component {
 					<p className="postcontent">{this.props.data.content}</p>
 					{this.props.clientusername === this.props.data.username &&
 						<div className="modifypostbar">
-						<button className="modifypostbutton">
+						<button className="modifypostbutton" onClick={() => this.props.openEdit(this.props.data._id)}>
 							<svg className="icon">
 								<path d="M15.75,7.834625 L12,4.084625 L12.808,3.276625 C13.8435,2.241125 15.5225,2.241125 16.558,3.276625 C17.5935,4.312125 17.5935,5.991125 16.558,7.026625 L15.75,7.834625 Z M11.366,5 L15.116,8.75 L7.25,16.616 L3.5,12.866 L11.366,5 Z M2.5035,13.5 L6.1125,17.109 L1,18.6125 L2.5035,13.5 Z"></path>
 							</svg>

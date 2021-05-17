@@ -1,0 +1,14 @@
+.posteditor {
+	position: absolute;
+
+	display: flex;
+    align-items: center;
+
+    background-color: white;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+
+    width: 640px;
+    overflow: hidden;
+    margin: 15px;
+}

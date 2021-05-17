@@ -16,26 +16,44 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			clientusername: "yagoo"
+			clientusername: null,
+			clientfriendlist: null,
+			clientincominglist: null,
+			clientoutgoinglist: null
 		}
 
 		this.handleLogin = this.handleLogin.bind(this);
+		this.refreshFriendList = this.refreshFriendList.bind(this);
 	}
 
 	handleLogin(username) {
 		this.setState({
 			clientusername: username
 		}, () => {
+			this.refreshFriendList();
 			// redirect to /feed after successful login
-			this.props.history.push('/feed')
+			this.props.history.push('/feed');
 		});
-		
+	}
+
+	refreshFriendList() {
+		fetch(`http://localhost:3001/user-details?username=${this.state.clientusername}`)
+		.then(response => response.json())
+		.then(body => {
+			this.setState({
+				...this.state,
+				clientfriendlist: body.friendlist,
+				clientincominglist: body.incomingFriendList,
+				clientoutgoinglist: body.outgoingFriendList
+			})
+		});
 	}
 
 	render() {
 		return (
 			<div className="App">
 				<Navbar clientusername={this.state.clientusername}/>
+				<div className="main">
 				{this.state.clientusername
 				?
 					<Switch>
@@ -49,7 +67,16 @@ class App extends React.Component {
 						<Route path="/login" render={(props) => (
 							<Login {...props} handleLogin={this.handleLogin} />)}
 						/>
-						<Route path="/search" component={Search} />
+						<Route path="/search" render={(props) => (
+							<Search {...props}
+								clientusername={this.state.clientusername}
+								clientfriendlist={this.state.clientfriendlist}
+								clientincominglist={this.state.clientincominglist}
+								clientoutgoinglist={this.state.clientoutgoinglist}
+								refreshFriendList={this.refreshFriendList}
+							/>)}
+						/>
+						{/* <Route path="/search" component={Search} /> */}
 						<Route path="/u/:username" component={Profile} />
 						<Route path="/about" component={About} />
 						<Route component={PageNotFound} />
@@ -67,6 +94,7 @@ class App extends React.Component {
 						<Route component={PageNotFound} />
 					</Switch>
 				}
+				</div>
 			</div>
 		)
 	}

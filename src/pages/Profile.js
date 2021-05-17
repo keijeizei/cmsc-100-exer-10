@@ -19,7 +19,6 @@ class Profile extends React.Component {
 		fetch(`http://localhost:3001/user-details?username=${this.state.username}`)
 		.then(response => response.json())
 		.then(body => {
-			console.log(body)
 			this.setState({
 				fname: body.fname,
 				lname: body.lname,

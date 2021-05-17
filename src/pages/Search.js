@@ -16,7 +16,6 @@ class Search extends React.Component {
 		fetch(`http://localhost:3001/search?name=${this.state.query}`)
 		.then(response => response.json())
 		.then(body => {
-			console.log(body)
 			this.setState({ users: body })
 		});
 	}
@@ -26,7 +25,18 @@ class Search extends React.Component {
 			<div>
 				{this.state.users.length > 0
 				?	this.state.users.map((user, i) => {
-						return <User key={i} data={user} />
+						if(user.username !== this.props.clientusername) {
+							return <User
+								key={i}
+								data={user}
+								clientusername={this.props.clientusername}
+								clientfriendlist={this.props.clientfriendlist}
+								clientincominglist={this.props.clientincominglist}
+								clientoutgoinglist={this.props.clientoutgoinglist}
+								refreshFriendList={this.props.refreshFriendList}
+							/>
+						}
+						else return null
 					})
 				:	<p>No results found.</p>
 				}
