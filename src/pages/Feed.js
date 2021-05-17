@@ -2,6 +2,8 @@ import React from 'react';
 import Post from '../components/Post';
 import PostCreator from '../components/PostCreator';
 import PostEditor from '../components/PostEditor';
+import FriendList from '../components/FriendList';
+import './Feed.css';
 
 class Feed extends React.Component {
 	constructor(props) {
@@ -49,25 +51,28 @@ class Feed extends React.Component {
 
 	render() {
 		return(
-			<div className="maincontent">
-				{this.state.isEditing &&
-					<PostEditor
-						feed={this.state.feed}
-						closeEdit={this.closeEdit}
-						editingID={this.state.editingID}
-						fetchFeed={this.fetchFeed}
-					/>
-				}
-				<PostCreator clientusername={this.props.clientusername} fetchFeed={this.fetchFeed} />
-				{this.state.feed.map(post => {
-					return <Post
-						key={post._id}
-						data={post}
-						clientusername={this.props.clientusername}
-						fetchFeed={this.fetchFeed}
-						openEdit={this.openEdit}
+			<div className="feed">
+				<div className="maincontent">
+					{this.state.isEditing &&
+						<PostEditor
+							feed={this.state.feed}
+							closeEdit={this.closeEdit}
+							editingID={this.state.editingID}
+							fetchFeed={this.fetchFeed}
 						/>
-				})}
+					}
+					<PostCreator clientusername={this.props.clientusername} fetchFeed={this.fetchFeed} />
+					{this.state.feed.map(post => {
+						return <Post
+							key={post._id}
+							data={post}
+							clientusername={this.props.clientusername}
+							fetchFeed={this.fetchFeed}
+							openEdit={this.openEdit}
+							/>
+					})}
+				</div>
+				<FriendList clientfriendlist={this.props.clientfriendlist} clientincominglist={this.props.clientincominglist}/>
 			</div>
 		)
 	}

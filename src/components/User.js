@@ -63,6 +63,23 @@ class User extends React.Component {
 				this.props.refreshFriendList();
 			})
 		}
+		else if(e.target.className === "userunfriendbutton") {
+			fetch('http://localhost:3001/handle-friend-request', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					username: this.props.clientusername,
+					target: this.props.data.username,
+					command: 2
+				})
+			})
+			.then(() => {
+				// refresh friend list
+				this.props.refreshFriendList();
+			})
+		}
 	}
 
 	render() {
@@ -73,7 +90,7 @@ class User extends React.Component {
 					<p className="username">u/{this.props.data.username}</p>
 				</Link>
 				{this.props.clientfriendlist.includes(this.props.data.username) &&
-					<button className="userunfriendbutton">
+					<button className="userunfriendbutton" onClick={this.handleFriend}>
 						Friends
 					</button>
 				}

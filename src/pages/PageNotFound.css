@@ -1,0 +1,14 @@
+.pagenotfound {
+	position: fixed;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.fourofour {
+	margin: -100px 0 0 0;
+	font-size: 100px;
+}

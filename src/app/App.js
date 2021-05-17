@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, Switch, Route } from 'react-router-dom';
+import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import './App.css';
 
@@ -30,9 +30,20 @@ class App extends React.Component {
 		this.setState({
 			clientusername: username
 		}, () => {
-			this.refreshFriendList();
-			// redirect to /feed after successful login
-			this.props.history.push('/feed');
+			// this is like refreshFriendList, but with a redirect to feed as callback
+			fetch(`http://localhost:3001/user-details?username=${this.state.clientusername}`)
+			.then(response => response.json())
+			.then(body => {
+				this.setState({
+					...this.state,
+					clientfriendlist: body.friendlist,
+					clientincominglist: body.incomingFriendList,
+					clientoutgoinglist: body.outgoingFriendList
+				}, () => {
+					// redirect to /feed after successful login
+					this.props.history.push('/feed');
+				})
+			});
 		});
 	}
 
@@ -57,15 +68,15 @@ class App extends React.Component {
 				{this.state.clientusername
 				?
 					<Switch>
-						<Route exact path="/" render={(props) => (
-							<Feed {...props} clientusername={this.state.clientusername} />)}
+						<Route exact path="/(feed|)/" render={(props) => (
+							<Feed {...props}
+								clientusername={this.state.clientusername}
+								clientfriendlist={this.state.clientfriendlist}
+								clientincominglist={this.state.clientincominglist}
+							/>)}
 						/>
-						<Route path="/feed" render={(props) => (
-							<Feed {...props} clientusername={this.state.clientusername} />)}
-						/>
-						<Route path="/signup" component={Signup} />
-						<Route path="/login" render={(props) => (
-							<Login {...props} handleLogin={this.handleLogin} />)}
+						<Route path="/(signup|login)/" render={() => (
+							<Redirect to="/"/>)}
 						/>
 						<Route path="/search" render={(props) => (
 							<Search {...props}
@@ -76,21 +87,28 @@ class App extends React.Component {
 								refreshFriendList={this.refreshFriendList}
 							/>)}
 						/>
-						{/* <Route path="/search" component={Search} /> */}
 						<Route path="/u/:username" component={Profile} />
 						<Route path="/about" component={About} />
 						<Route component={PageNotFound} />
 					</Switch>
 				:
 					<Switch>
-						<Route exact path="/" render={(props) => (
+						<Route exact path="/(feed|search|)/" render={() => (
+							<Redirect to="/loginrequired"/>)}
+						/>
+						<Route path="/(login)/" render={(props) => (
 							<Login {...props} handleLogin={this.handleLogin} />)}
 						/>
-						<Route path="/login" render={(props) => (
-							<Login {...props} handleLogin={this.handleLogin} />)}
+						<Route path="/loginrequired" render={(props) => (
+							<div>
+								<p className="loginrequiredtext">You must log-in first.</p>
+								<Login {...props} handleLogin={this.handleLogin} />
+							</div>
+							)}
 						/>
 						<Route path="/signup" component={Signup} />
 						<Route path="/u/:username" component={Profile} />
+						<Route path="/about" component={About} />
 						<Route component={PageNotFound} />
 					</Switch>
 				}

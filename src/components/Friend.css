@@ -1,0 +1,15 @@
+.friend {
+	border-bottom: 1px solid #edeff1;
+	padding: 5px 10px;
+
+	display: flex;
+	align-items: center;
+}
+
+.friendpic {
+	background-color: #edeff1;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	margin: 0 10px;
+}

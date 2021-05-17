@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './Login.css';
 
 class Login extends React.Component {
@@ -56,6 +56,7 @@ class Login extends React.Component {
 				Password
 				<input className="loginbar" type="password" id="password" name="password" onKeyPress={this.handleKeyPress}/>
 				<button className="loginbutton" onClick={this.handleSubmit}>Log in</button>
+				<p>No account? <Link to="/signup">Sign-up</Link></p>
 			</div>
 		)
 	}
