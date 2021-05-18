@@ -96,7 +96,7 @@ class App extends React.Component {
 						<Route exact path="/(feed|search|)/" render={() => (
 							<Redirect to="/loginrequired"/>)}
 						/>
-						<Route path="/(login)/" render={(props) => (
+						<Route path="/login" render={(props) => (
 							<Login {...props} handleLogin={this.handleLogin} />)}
 						/>
 						<Route path="/loginrequired" render={(props) => (
@@ -106,7 +106,9 @@ class App extends React.Component {
 							</div>
 							)}
 						/>
-						<Route path="/signup" component={Signup} />
+						<Route path="/signup" render={(props) => (
+							<Signup {...props} handleLogin={this.handleLogin} />)}
+						/>
 						<Route path="/u/:username" component={Profile} />
 						<Route path="/about" component={About} />
 						<Route component={PageNotFound} />

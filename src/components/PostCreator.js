@@ -7,8 +7,8 @@ class PostCreator extends React.Component {
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
+
 	handleSubmit() {
-		// to-do: try to use state instead of innerText
 		const content = document.getElementById('textarea').innerText;
 
 		fetch('http://localhost:3001/add-post', {
