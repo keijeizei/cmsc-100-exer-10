@@ -6,7 +6,6 @@ import './Feed.css';
 
 class Feed extends React.Component {
 	render() {
-		console.log(this.props.clientincominglist)
 		return(
 			<div className="feed">
 				<div className="maincontent">

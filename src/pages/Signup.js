@@ -79,16 +79,15 @@ class Signup extends React.Component {
 			})
 			.then(response => response.json())
 			.then(body => {
-				console.log(body)
-				if(body.sucess) {
+				if(body.success) {
 					this.props.handleLogin(body.clientusername, body.token);
 				}
 				else {
 					if(body.usernametaken) {
-						console.log("Username already taken.")
+						alert("Username already taken.")
 					}
 					else {
-						console.log("Sign-up failed. Please try again.")
+						alert("Sign-up failed. Please try again.")
 					}
 				}
 			})	
@@ -99,6 +98,7 @@ class Signup extends React.Component {
 		return(
 			<div>
 				<form className="signup">
+					<h1>Create an account</h1>
 					<label htmlFor="fname">First Name</label>
 					<input
 						type="text"

@@ -26,16 +26,15 @@ class Login extends React.Component {
 		})
 		.then(response => response.json())
 		.then(body => {
-			console.log(body)
 			if(body.success) {
 				this.props.handleLogin(body.clientusername, body.token);
 			}
 			else {
 				if(body.clientusername) {
-					console.log("Incorrect password.")
+					alert("Incorrect password.")
 				}
 				else {
-					console.log("Account not found.")
+					alert("Account not found.")
 				}
 			}
 		})
@@ -45,6 +44,7 @@ class Login extends React.Component {
 		return(
 			<div>
 				<form className="login">
+					<h1>Welcome to radish!</h1>
 					<label htmlFor="fname">Email or Username</label>
 					<input className="loginbar" type="text" id="email" autoFocus/>
 					<label htmlFor="fname">Password</label>

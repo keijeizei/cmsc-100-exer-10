@@ -9,7 +9,7 @@ class PostCreator extends React.Component {
 	}
 
 	handleSubmit() {
-		const content = document.getElementById('textarea').innerText;
+		const content = document.getElementById('textarea');
 
 		fetch('http://localhost:3001/add-post', {
 			method: 'POST',
@@ -18,12 +18,13 @@ class PostCreator extends React.Component {
 			},
 			body: JSON.stringify({
 				username: this.props.clientusername,
-				content: content
+				content: content.innerText
 			})
 		})
 		.then(() => {
 			// refresh feed
 			this.props.fetchFeed();
+			content.innerText = "";
 		})
 
 		

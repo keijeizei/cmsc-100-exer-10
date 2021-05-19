@@ -7,8 +7,8 @@ class Search extends React.Component {
 		super(props)
 
 		this.state = {
-			query: queryString.parse(props.location.search).name,
-			users: []
+			query: queryString.parse(this.props.location.search).name,
+			users: null
 		}
 	}
 
@@ -20,7 +20,22 @@ class Search extends React.Component {
 		});
 	}
 
+	componentDidUpdate(prevProps) {
+		if(this.state.query !== queryString.parse(this.props.location.search).name) {
+			this.setState({ query: queryString.parse(this.props.location.search).name }, () => {
+				fetch(`http://localhost:3001/search?name=${this.state.query}`)
+				.then(response => response.json())
+				.then(body => {
+					this.setState({ users: body })
+				});
+			});
+		}
+	}
+
 	render() {
+		if(this.state.users === null) {
+			return(<div></div>)
+		}
 		return(
 			<div>
 				{this.state.users.length > 0

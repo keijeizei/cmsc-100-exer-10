@@ -8,7 +8,7 @@ class Profile extends React.Component {
 
 		this.state = {
 			username: this.props.match.params.username,
-			fname: "",
+			fname: null,
 			lname: "",
 			email: "",
 			picture: "",
@@ -30,7 +30,28 @@ class Profile extends React.Component {
 		});
 	}
 
+	componentDidUpdate(prevProps) {
+		if(this.state.username !== this.props.match.params.username) {
+			this.setState({ username: this.props.match.params.username }, () => {
+				fetch(`http://localhost:3001/user-details?username=${this.state.username}`)
+				.then(response => response.json())
+				.then(body => {
+					this.setState({
+						fname: body.fname,
+						lname: body.lname,
+						email: body.email,
+						picture: body.picture,
+						karma: body.karma
+					})
+				});
+			})
+		}
+	}
+
 	render() {
+		if(this.state.fname === null) {
+			return(<div></div>)
+		}
 		return(
 			<div>
 				{this.state.fname

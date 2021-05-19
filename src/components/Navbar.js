@@ -32,6 +32,8 @@ class Navbar extends React.Component {
 					</Link>
 					<h2>radish</h2>
 				</div>
+				{this.props.clientusername
+				?
 				<div className="searchbar">
 					<input 
 						type="text"
@@ -41,6 +43,9 @@ class Navbar extends React.Component {
 						onKeyPress={this.handleKeyPress}/>
 					<button className="postbutton" onClick={this.handleSubmit}><b>Search</b></button>
 				</div>
+				:
+				<div></div>
+				}
 				{/* the SVG icons are from www.reddit.com */}
 				{this.props.clientusername
 				?

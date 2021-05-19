@@ -20,9 +20,9 @@ class App extends React.Component {
 		this.state = {
 			checkedIfLoggedIn: false,
 			clientusername: null,
-			clientfriendlist: null,
-			clientincominglist: null,
-			clientoutgoinglist: null,
+			clientfriendlist: [],
+			clientincominglist: [],
+			clientoutgoinglist: [],
 			feed: []
 		}
 
@@ -33,7 +33,6 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		// Send POST request to check if user is logged in
 		fetch("http://localhost:3001/check-if-logged-in", {
 			method: "POST",
 			credentials: "include"
@@ -43,7 +42,7 @@ class App extends React.Component {
 			if(body.isLoggedIn) {
 				this.setState({ clientusername: localStorage.getItem("username") }, () => {
 					this.refreshFriendList(() => {
-						this.setState({ checkedIfLoggedIn: true })
+						this.fetchFeed(() => this.setState({ checkedIfLoggedIn: true }))
 					});
 				});
 			}
@@ -73,7 +72,9 @@ class App extends React.Component {
 		this.setState({
 			clientusername: username
 		}, () => {
-			this.refreshFriendList(() => this.props.history.push('/feed'));
+			this.refreshFriendList(() => {
+				this.fetchFeed(() => this.props.history.push('/feed'))
+			});
 		});
 	}
 
@@ -90,12 +91,18 @@ class App extends React.Component {
 		});
 	}
 
-	fetchFeed() {
+	fetchFeed(callback) {
 		fetch(`http://localhost:3001/get-feed?username=${this.state.clientusername}`)
 		.then(response => response.json())
 		.then(body => {
+			console.log(body)
 			body.sort((a, b) => b.timestamp - a.timestamp)
-			this.setState({ feed: body })
+			this.setState({ feed: body }, () => {
+				// accept a callback function after set state
+				if(typeof(callback) === "function") {
+					callback();
+				}
+			})
 		})
 	}
 
@@ -121,84 +128,82 @@ class App extends React.Component {
 		if(!this.state.checkedIfLoggedIn) {
 			return(<div></div>)
 		}
-		else {
-			return(
-				<div className="App">
-					<Navbar 
-						clientusername={this.state.clientusername}
-						logout={this.logout}
+		return(
+			<div className="App">
+				<Navbar 
+					clientusername={this.state.clientusername}
+					logout={this.logout}
+				/>
+				<div className="main">
+				{this.state.clientusername
+				?
+				<Switch>
+					<Route exact path="/(feed|)/" render={(props) => (
+						<Feed {...props}
+							clientusername={this.state.clientusername}
+							clientfriendlist={this.state.clientfriendlist}
+							clientincominglist={this.state.clientincominglist}
+							feed={this.state.feed}
+							fetchFeed={this.fetchFeed}
+						/>)}
 					/>
-					<div className="main">
-					{this.state.clientusername
-					?
-					<Switch>
-						<Route exact path="/(feed|)/" render={(props) => (
-							<Feed {...props}
-								clientusername={this.state.clientusername}
-								clientfriendlist={this.state.clientfriendlist}
-								clientincominglist={this.state.clientincominglist}
-								feed={this.state.feed}
-								fetchFeed={this.fetchFeed}
-							/>)}
-						/>
-						<Route path="/(signup|login)/" render={() => (
-							<Redirect to="/"/>)}
-						/>
-						<Route path="/search" render={(props) => (
-							<Search {...props}
-								clientusername={this.state.clientusername}
-								clientfriendlist={this.state.clientfriendlist}
-								clientincominglist={this.state.clientincominglist}
-								clientoutgoinglist={this.state.clientoutgoinglist}
-								refreshFriendList={this.refreshFriendList}
-							/>)}
-						/>
-						<Route path="/editpost" render={(props) => (
-							<PostEditor {...props}
-								feed={this.state.feed}
-								fetchFeed={this.fetchFeed}
-								clientusername={this.state.clientusername}
-							/>)}
-						/>
-						<Route path="/u/:username" render={(props) => (
-							<Profile {...props}
-								clientusername={this.state.clientusername}
-								clientfriendlist={this.state.clientfriendlist}
-								clientoutgoinglist={this.state.clientoutgoinglist}
-								clientincominglist={this.state.clientincominglist}
-								refreshFriendList={this.refreshFriendList}
-							/>)}
-						/>
-						<Route path="/about" component={About} />
-						<Route component={PageNotFound} />
-					</Switch>
-					:
-					<Switch>
-						<Route exact path="/(feed|search|editpost)/" render={() => (
-							<Redirect to="/loginrequired"/>)}
-						/>
-						<Route path="/(login|)" render={(props) => (
-							<Login {...props} handleLogin={this.handleLogin} />)}
-						/>
-						<Route path="/loginrequired" render={(props) => (
-							<div>
-								<p className="loginrequiredtext">You must log-in first.</p>
-								<Login {...props} handleLogin={this.handleLogin} />
-							</div>
-							)}
-						/>
-						<Route path="/signup" render={(props) => (
-							<Signup {...props} handleLogin={this.handleLogin} />)}
-						/>
-						<Route path="/u/:username" component={Profile} />
-						<Route path="/about" component={About} />
-						<Route component={PageNotFound} />
-					</Switch>
-					}
-					</div>
+					<Route path="/(signup|login)/" render={() => (
+						<Redirect to="/"/>)}
+					/>
+					<Route path="/search" render={(props) => (
+						<Search {...props}
+							clientusername={this.state.clientusername}
+							clientfriendlist={this.state.clientfriendlist}
+							clientincominglist={this.state.clientincominglist}
+							clientoutgoinglist={this.state.clientoutgoinglist}
+							refreshFriendList={this.refreshFriendList}
+						/>)}
+					/>
+					<Route path="/editpost" render={(props) => (
+						<PostEditor {...props}
+							feed={this.state.feed}
+							fetchFeed={this.fetchFeed}
+							clientusername={this.state.clientusername}
+						/>)}
+					/>
+					<Route path="/u/:username" render={(props) => (
+						<Profile {...props}
+							clientusername={this.state.clientusername}
+							clientfriendlist={this.state.clientfriendlist}
+							clientoutgoinglist={this.state.clientoutgoinglist}
+							clientincominglist={this.state.clientincominglist}
+							refreshFriendList={this.refreshFriendList}
+						/>)}
+					/>
+					<Route path="/about" component={About} />
+					<Route component={PageNotFound} />
+				</Switch>
+				:
+				<Switch>
+					<Route exact path="/(feed|search|editpost)/" render={() => (
+						<Redirect to="/loginrequired"/>)}
+					/>
+					<Route path="/(login|)" render={(props) => (
+						<Login {...props} handleLogin={this.handleLogin} />)}
+					/>
+					<Route path="/loginrequired" render={(props) => (
+						<div>
+							<p className="loginrequiredtext">You must log-in first.</p>
+							<Login {...props} handleLogin={this.handleLogin} />
+						</div>
+						)}
+					/>
+					<Route path="/signup" render={(props) => (
+						<Signup {...props} handleLogin={this.handleLogin} />)}
+					/>
+					<Route path="/u/:username" component={Profile} />
+					<Route path="/about" component={About} />
+					<Route component={PageNotFound} />
+				</Switch>
+				}
 				</div>
-			)
-		}
+			</div>
+		)
 	}
 }
 
