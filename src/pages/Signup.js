@@ -79,8 +79,9 @@ class Signup extends React.Component {
 			})
 			.then(response => response.json())
 			.then(body => {
+				console.log(body)
 				if(body.sucess) {
-					this.props.handleLogin(this.state.username);
+					this.props.handleLogin(body.clientusername, body.token);
 				}
 				else {
 					if(body.usernametaken) {

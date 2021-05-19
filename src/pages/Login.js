@@ -26,8 +26,9 @@ class Login extends React.Component {
 		})
 		.then(response => response.json())
 		.then(body => {
+			console.log(body)
 			if(body.success) {
-				this.props.handleLogin(body.clientusername);
+				this.props.handleLogin(body.clientusername, body.token);
 			}
 			else {
 				if(body.clientusername) {

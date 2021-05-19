@@ -18,6 +18,7 @@
 }
 
 .buttoncontainer {
+	display: flex;
 	margin: 0;
 	padding: 0;
 }
@@ -35,8 +36,21 @@
 }
 
 .iconbutton {
+	display: flex;
 	padding: 7px;
+	background-color: white;
+	border: 0;
 	border-radius: 5px;
+}
+
+.iconlabel {
+	margin: 0;
+	padding: 0;
+
+	text-decoration: none;
+	color: black;
+
+	font-size: 15px;
 }
 
 .iconbutton:hover {

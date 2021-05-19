@@ -1,8 +1,9 @@
 import React from 'react';
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import Cookies from "universal-cookie";
 import './App.css';
 
+import Navbar from '../components/Navbar';
 import Feed from '../pages/Feed';
 import PostEditor from '../pages/PostEditor';
 import Signup from '../pages/Signup';
@@ -17,6 +18,7 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
+			checkedIfLoggedIn: false,
 			clientusername: null,
 			clientfriendlist: null,
 			clientincominglist: null,
@@ -27,28 +29,64 @@ class App extends React.Component {
 		this.handleLogin = this.handleLogin.bind(this);
 		this.fetchFeed = this.fetchFeed.bind(this);
 		this.refreshFriendList = this.refreshFriendList.bind(this);
+		this.logout = this.logout.bind(this);
 	}
 
-	handleLogin(username) {
+	componentDidMount() {
+		// Send POST request to check if user is logged in
+		fetch("http://localhost:3001/check-if-logged-in", {
+			method: "POST",
+			credentials: "include"
+		})
+		.then(response => response.json())
+		.then(body => {
+			if(body.isLoggedIn) {
+				this.setState({ clientusername: localStorage.getItem("username") }, () => {
+					this.refreshFriendList(() => {
+						this.setState({ checkedIfLoggedIn: true })
+					});
+				});
+			}
+			else {
+				this.setState({
+					checkedIfLoggedIn: true,
+					clientusername: null
+				});
+			}
+		});
+	}
+
+	handleLogin(username, token) {
+		const cookies = new Cookies();
+		cookies.set(
+			"authToken",
+			token,
+			{
+				path: "localhost:3001/",
+				age: 60*60,
+				sameSite: "lax"
+			}
+		);
+
+		localStorage.setItem("username", username);
+
 		this.setState({
 			clientusername: username
 		}, () => {
-			// this is like refreshFriendList, but with a redirect to feed as callback
-			fetch(`http://localhost:3001/user-details?username=${this.state.clientusername}`)
-			.then(response => response.json())
-			.then(body => {
-				this.fetchFeed();
+			this.refreshFriendList(() => this.props.history.push('/feed'));
+		});
+	}
 
-				this.setState({
-					...this.state,
-					clientfriendlist: body.friendlist,
-					clientincominglist: body.incomingFriendList,
-					clientoutgoinglist: body.outgoingFriendList
-				}, () => {
-					// redirect to /feed after successful login
-					this.props.history.push('/feed');
-				})
-			});
+	logout() {
+		// delete cookie with authToken
+		const cookies = new Cookies();
+		cookies.remove("authToken");
+	
+		// Delete username in local storage
+		localStorage.removeItem("username");
+	
+		this.setState({ clientusername: null }, () => {
+			this.props.history.push('/login');
 		});
 	}
 
@@ -61,7 +99,7 @@ class App extends React.Component {
 		})
 	}
 
-	refreshFriendList() {
+	refreshFriendList(callback) {
 		fetch(`http://localhost:3001/user-details?username=${this.state.clientusername}`)
 		.then(response => response.json())
 		.then(body => {
@@ -70,17 +108,29 @@ class App extends React.Component {
 				clientfriendlist: body.friendlist,
 				clientincominglist: body.incomingFriendList,
 				clientoutgoinglist: body.outgoingFriendList
+			}, () => {
+				// accept a callback function after set state
+				if(typeof(callback) === "function") {
+					callback();
+				}
 			})
 		});
 	}
 
 	render() {
-		return (
-			<div className="App">
-				<Navbar clientusername={this.state.clientusername}/>
-				<div className="main">
-				{this.state.clientusername
-				?
+		if(!this.state.checkedIfLoggedIn) {
+			return(<div></div>)
+		}
+		else {
+			return(
+				<div className="App">
+					<Navbar 
+						clientusername={this.state.clientusername}
+						logout={this.logout}
+					/>
+					<div className="main">
+					{this.state.clientusername
+					?
 					<Switch>
 						<Route exact path="/(feed|)/" render={(props) => (
 							<Feed {...props}
@@ -122,12 +172,12 @@ class App extends React.Component {
 						<Route path="/about" component={About} />
 						<Route component={PageNotFound} />
 					</Switch>
-				:
+					:
 					<Switch>
-						<Route exact path="/(feed|search|editpost|)/" render={() => (
+						<Route exact path="/(feed|search|editpost)/" render={() => (
 							<Redirect to="/loginrequired"/>)}
 						/>
-						<Route path="/login" render={(props) => (
+						<Route path="/(login|)" render={(props) => (
 							<Login {...props} handleLogin={this.handleLogin} />)}
 						/>
 						<Route path="/loginrequired" render={(props) => (
@@ -144,10 +194,11 @@ class App extends React.Component {
 						<Route path="/about" component={About} />
 						<Route component={PageNotFound} />
 					</Switch>
-				}
+					}
+					</div>
 				</div>
-			</div>
-		)
+			)
+		}
 	}
 }
 
