@@ -1,13 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Friend.css';
 
 class Friend extends React.Component {
 	render() {
 		return(
-			<div className="friend">
+			<Link to={`/u/${this.props.username}`} className="friend">
 				<div className="friendpic"></div>
 				<p className="friendname">{this.props.username}</p>
-			</div>
+			</Link>
 		)
 	}
 }

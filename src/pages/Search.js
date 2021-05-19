@@ -1,6 +1,6 @@
 import React from 'react';
 import User from '../components/User';
-const queryString = require('query-string');
+import queryString from 'query-string';
 
 class Search extends React.Component {
 	constructor(props) {

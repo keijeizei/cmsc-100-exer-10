@@ -1,4 +1,5 @@
 import React from 'react';
+import FriendButton from '../components/FriendButton';
 import './Profile.css';
 
 class Profile extends React.Component {
@@ -40,6 +41,16 @@ class Profile extends React.Component {
 						<div className="profilepiclarge"></div>
 						<h1>{this.state.fname} {this.state.lname}</h1>
 						<p>u/{this.state.username}</p>
+						{(this.props.clientusername && this.props.clientusername !== this.state.username) &&
+							<FriendButton
+								clientusername={this.props.clientusername}
+								clientfriendlist={this.props.clientfriendlist}
+								clientoutgoinglist={this.props.clientoutgoinglist}
+								clientincominglist={this.props.clientincominglist}
+								refreshFriendList={this.props.refreshFriendList}
+								target={this.state.username}
+							/>
+						}
 						<p>{this.state.email}</p>
 						<p>{this.state.karma} karma</p>
 					</div>

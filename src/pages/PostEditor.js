@@ -1,4 +1,6 @@
 import React from 'react';
+import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
 import './PostEditor.css';
 
 class PostEditor extends React.Component {
@@ -6,15 +8,17 @@ class PostEditor extends React.Component {
 		super(props);
 		
 		this.state = {
+			id: queryString.parse(props.location.search).id,
 			content: ""
 		}
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleCancel = this.handleCancel.bind(this);
 	}
 
 	componentDidMount() {
-		const post = this.props.feed.filter(post => post._id === this.props.editingID)
+		const post = this.props.feed.filter(post => post._id === this.state.id)
 		this.setState({ content: post[0].content });
 		console.log(post[0])
 	}
@@ -31,20 +35,25 @@ class PostEditor extends React.Component {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				_id: this.props.editingID,
+				_id: this.state.id,
 				content: this.state.content
 			})
 		})
 		.then(() => {
 			// refresh feed
 			this.props.fetchFeed();
-			this.props.closeEdit();
+			this.props.history.push(`/feed`);
 		})
+	}
+
+	handleCancel() {
+		this.props.history.push(`/feed`);
 	}
 
     render() {
         return(
             <div className="posteditor">
+				<h2>Edit post</h2>
                 <p>
 					<textarea
 						className="textarea"
@@ -54,10 +63,13 @@ class PostEditor extends React.Component {
 						cols="50">
 					</textarea>
 				</p>
-                <button className="postbutton" onClick={this.handleSubmit}><b>Edit Post</b></button>
+				<div>
+					<button className="postbutton" onClick={this.handleSubmit}><b>Edit Post</b></button>
+					<button className="postcancelbutton" onClick={this.handleCancel}>Cancel</button>
+				</div>
             </div>
         )
     }
 }
 
-export default PostEditor;
+export default withRouter(PostEditor);

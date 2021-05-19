@@ -37,6 +37,10 @@ class Post extends React.Component {
 		}
 	}
 
+	openEditor() {
+
+	}
+
 	handleDelete() {
 		fetch('http://localhost:3001/delete-post', {
 			method: 'POST',
@@ -135,14 +139,16 @@ class Post extends React.Component {
 						&nbsp;| {this.state.timestampstring}
 					</p>
 					<p className="postcontent">{this.props.data.content}</p>
+					{/* the SVG icons are from www.reddit.com */}
 					{this.props.clientusername === this.props.data.username &&
 						<div className="modifypostbar">
-						<button className="modifypostbutton" onClick={() => this.props.openEdit(this.props.data._id)}>
+						<Link className="modifypostbutton" to={`/editpost?id=${this.props.data._id}`}>
 							<svg className="icon">
 								<path d="M15.75,7.834625 L12,4.084625 L12.808,3.276625 C13.8435,2.241125 15.5225,2.241125 16.558,3.276625 C17.5935,4.312125 17.5935,5.991125 16.558,7.026625 L15.75,7.834625 Z M11.366,5 L15.116,8.75 L7.25,16.616 L3.5,12.866 L11.366,5 Z M2.5035,13.5 L6.1125,17.109 L1,18.6125 L2.5035,13.5 Z"></path>
 							</svg>
 							<p className="modifypostbuttontext">Edit</p>
-						</button>
+						</Link>
+
 						<button className="modifypostbutton" onClick={this.handleDelete}>
 							<svg className="icon">
 								<path d="M16.5,2H12.71l-.85-.85A.5.5,0,0,0,11.5,1h-3a.5.5,0,0,0-.35.15L7.29,2H3.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5v-1A.5.5,0,0,0,16.5,2Z"></path>

@@ -13,7 +13,7 @@ class Navbar extends React.Component {
 	
 	handleSubmit() {
 		const searchquery = document.getElementById('searchbox').value;
-		this.props.history.push(`/search?name=${searchquery}`)
+		this.props.history.push(`/search?name=${searchquery}`);
 	}
 
 	handleKeyPress(e) {
@@ -29,12 +29,16 @@ class Navbar extends React.Component {
 				<div className="logocontainer">
 					<Link to='/'>
 						<img className="logo" src={logo} alt="Radish"/>
-						
 					</Link>
 					<h2>radish</h2>
 				</div>
 				<div className="searchbar">
-					<input type="text" id="searchbox" name="searchbox" onKeyPress={this.handleKeyPress}/>
+					<input 
+						type="text"
+						id="searchbox"
+						name="searchbox"
+						placeholder="Enter a name, email, or username..."
+						onKeyPress={this.handleKeyPress}/>
 					<button className="postbutton" onClick={this.handleSubmit}><b>Search</b></button>
 				</div>
 				{/* the SVG icons are from www.reddit.com */}

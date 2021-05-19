@@ -1,0 +1,48 @@
+.useraddfriendbutton {
+	background-color: white;
+	color: #2d62d7;
+	border: 1px solid #2d62d7;
+	border-radius: 20px;
+	height: 40px;
+	padding: 5px 30px;
+	transition: 0.2s;
+}
+
+.useracceptfriendbutton {
+	background-color: #00ff4c;
+	color: white;
+	border: 0px;
+	border-radius: 20px;
+	height: 40px;
+	padding: 5px 30px;
+	transition: 0.2s;
+}
+
+.usercancelfriendbutton {
+	background-color: #ff4500;
+	color: white;
+	border: 0px;
+	border-radius: 20px;
+	height: 40px;
+	padding: 5px 30px;
+	transition: 0.2s;
+}
+
+.userunfriendbutton {
+	background-color: #2d62d7;
+	color: white;
+	border: 1px solid #2d62d7;
+	border-radius: 20px;
+	height: 40px;
+	padding: 5px 30px;
+	transition: 0.2s;
+}
+
+.useraddfriendbutton:hover {
+	background-color: #2d62d7;
+	color: white;
+}
+
+.useracceptfriendbutton:hover, .usercancelfriendbutton:hover, .userunfriendbutton:hover {
+    opacity: 0.8;
+}
