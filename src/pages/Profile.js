@@ -1,5 +1,6 @@
 import React from 'react';
 import FriendButton from '../components/FriendButton';
+import defaultpic from '../assets/defaultpic.png';
 import './Profile.css';
 
 class Profile extends React.Component {
@@ -59,7 +60,9 @@ class Profile extends React.Component {
 				<div className="profile">
 					<div className="profilebanner"></div>
 					<div className="profiledetails">
-						<div className="profilepiclarge"></div>
+						<div className="profilepiclarge">
+							<img src={defaultpic} width="120px" alt={this.state.username}/>
+						</div>
 						<h1>{this.state.fname} {this.state.lname}</h1>
 						<p>u/{this.state.username}</p>
 						{(this.props.clientusername && this.props.clientusername !== this.state.username) &&

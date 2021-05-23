@@ -1,5 +1,6 @@
 import React from 'react';
 import Post from '../components/Post';
+import AdBar from '../components/AdBar';
 import PostCreator from '../components/PostCreator';
 import FriendList from '../components/FriendList';
 import './Feed.css';
@@ -8,6 +9,7 @@ class Feed extends React.Component {
 	render() {
 		return(
 			<div className="feed">
+				<AdBar />
 				<div className="maincontent">
 					<PostCreator clientusername={this.props.clientusername} fetchFeed={this.props.fetchFeed} />
 					{this.props.feed.map(post => {

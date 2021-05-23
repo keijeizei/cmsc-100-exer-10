@@ -1,0 +1,32 @@
+.advbar {
+	width: 280px;
+	height: 100%;
+	background-color: white;
+	border: 1px solid #cccccc;
+	border-radius: 5px;
+	margin: 15px;
+}
+
+.adv-title {
+	text-align: left;
+}
+
+.adv-title p {
+	font-family: 'IBM Plex Sans', sans-serif;
+	font-size: 10px;
+}
+
+.ad {
+	width: 100%;
+	transition: 0.5s;
+}
+
+.ad:hover {
+	opacity: 0.6;
+}
+
+.adcaption {
+	margin: 10px;
+	text-align: center;
+	font-size: 12px;
+}

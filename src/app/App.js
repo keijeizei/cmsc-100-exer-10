@@ -95,7 +95,6 @@ class App extends React.Component {
 		fetch(`http://localhost:3001/get-feed?username=${this.state.clientusername}`)
 		.then(response => response.json())
 		.then(body => {
-			console.log(body)
 			body.sort((a, b) => b.timestamp - a.timestamp)
 			this.setState({ feed: body }, () => {
 				// accept a callback function after set state

@@ -27,7 +27,7 @@ class Post extends React.Component {
 
 		// convert date to word date
 		const timestampdate = new Date(parseInt(this.props.data.timestamp));
-		this.setState({ timestampstring: timestampdate.toString() })
+		this.setState({ timestampstring: timestampdate.toString().slice(0, 24) })
 	}
 
 	componentDidUpdate(prevProps) {
@@ -35,10 +35,6 @@ class Post extends React.Component {
 		if(prevProps.data.up.length !== this.props.data.up.length || prevProps.data.down.length !== this.props.data.down.length) {
 			this.refreshVoteButtons();
 		}
-	}
-
-	openEditor() {
-
 	}
 
 	handleDelete() {
@@ -135,6 +131,7 @@ class Post extends React.Component {
 				</div>
 				<div className="postbody">
 					<p className="postdetails">
+						Posted by&nbsp;
 						<Link className="postusername" to={`/u/${this.props.data.username}`}>u/{this.props.data.username}</Link>
 						&nbsp;| {this.state.timestampstring}
 					</p>

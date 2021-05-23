@@ -45,6 +45,7 @@ class Login extends React.Component {
 			<div>
 				<form className="login">
 					<h1>Welcome to radish!</h1>
+					<p><b>It's your typical social media site, but with Reddit's upvote and karma system.</b></p>
 					<label htmlFor="fname">Email or Username</label>
 					<input className="loginbar" type="text" id="email" autoFocus/>
 					<label htmlFor="fname">Password</label>
