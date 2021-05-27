@@ -9,8 +9,8 @@ class FriendButton extends React.Component {
 	}
 
 	handleClick(e) {
+		// add friend
 		if(e.target.className === "useraddfriendbutton") {
-			console.log(this.props.clientusername, this.props.target)
 			fetch('http://localhost:3001/handle-friend-request', {
 				method: 'POST',
 				headers: {
@@ -23,11 +23,11 @@ class FriendButton extends React.Component {
 				})
 			})
 			.then(() => {
-				console.log(2)
 				// refresh friend list
 				this.props.refreshFriendList();
 			})
 		}
+		// cancel friend request
 		else if(e.target.className === "usercancelfriendbutton") {
 			fetch('http://localhost:3001/handle-friend-request', {
 				method: 'POST',
@@ -45,6 +45,7 @@ class FriendButton extends React.Component {
 				this.props.refreshFriendList();
 			})
 		}
+		// accept friend request
 		else if(e.target.className === "useracceptfriendbutton") {
 			fetch('http://localhost:3001/handle-friend-request', {
 				method: 'POST',
@@ -62,6 +63,7 @@ class FriendButton extends React.Component {
 				this.props.refreshFriendList();
 			})
 		}
+		// unfriend
 		else if(e.target.className === "userunfriendbutton") {
 			fetch('http://localhost:3001/handle-friend-request', {
 				method: 'POST',

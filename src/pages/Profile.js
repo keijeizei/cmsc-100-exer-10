@@ -64,7 +64,7 @@ class Profile extends React.Component {
 							<img src={defaultpic} width="120px" alt={this.state.username}/>
 						</div>
 						<h1>{this.state.fname} {this.state.lname}</h1>
-						<p>u/{this.state.username}</p>
+						<p className="profiledetailstext">u/<b>{this.state.username}</b></p>
 						{(this.props.clientusername && this.props.clientusername !== this.state.username) &&
 							<FriendButton
 								clientusername={this.props.clientusername}
@@ -75,8 +75,8 @@ class Profile extends React.Component {
 								target={this.state.username}
 							/>
 						}
-						<p>{this.state.email}</p>
-						<p>{this.state.karma} karma</p>
+						<p className="profiledetailstext">{this.state.email}</p>
+						<p className="profiledetailstext"><b>{this.state.karma}</b> karma</p>
 					</div>
 				</div>
 				:

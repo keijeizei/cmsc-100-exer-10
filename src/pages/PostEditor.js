@@ -18,14 +18,13 @@ class PostEditor extends React.Component {
 	}
 
 	componentDidMount() {
+		// get the post with the id from the URL query
 		const post = this.props.feed.filter(post => post._id === this.state.id)
 		this.setState({ content: post[0].content });
-		console.log(post[0])
 	}
 
 	handleChange(e) {
 		this.setState({ content: e.target.value });
-		console.log(this.state.content)
 	}
 
 	handleSubmit() {
